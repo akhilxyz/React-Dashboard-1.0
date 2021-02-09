@@ -80,4 +80,4 @@ CoreUI-React#v3.0.0
 
 ## Copyright and License
 
-copyright 2020 Akhil Choudhary.   
+copyright 2020 [Akhil Choudhary](https://github.com/akhilxyz)   
