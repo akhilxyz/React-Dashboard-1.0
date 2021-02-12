@@ -1,7 +1,7 @@
 import React from 'react';
 
 const Payment = React.lazy(() => import('./pages/payment'));
-const Company = React.lazy(() => import('./pages/company'));
+const Company = React.lazy(() => import('./pages/Company'));
 const Notification = React.lazy(() => import('./pages/notification'));
 const Service = React.lazy(() => import('./pages/service'));
 const Dashboard = React.lazy(() => import('./pages/Dashboard/index'));

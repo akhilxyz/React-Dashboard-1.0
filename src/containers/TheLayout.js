@@ -1,4 +1,7 @@
 import React from 'react'
+import NotificationContainer from 'react-notifications/lib/NotificationContainer'
+import 'react-notifications/lib/notifications.css';
+
 import {
   TheContent,
   TheSidebar,
@@ -10,6 +13,7 @@ const TheLayout = () => {
 
   return (
     <div className="c-app c-default-layout">
+      <NotificationContainer/>
       <TheSidebar/>
       <div className="c-wrapper">
         <TheHeader/>
