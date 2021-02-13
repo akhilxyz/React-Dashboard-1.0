@@ -1,13 +1,17 @@
-import React from 'react';
-import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
-import { NotificationManager } from 'react-notifications';
-import { CSelect } from '@coreui/react';
-import { ServiceName, ServiceDescription, ServicePrice, ServiceDuration } from '../utils/validation'
-import { AddService, UpdateService } from 'src/api/service';
+import React from "react";
+import { Button, Form, FormGroup, Label, Input } from "reactstrap";
+import { NotificationManager } from "react-notifications";
+import { CSelect } from "@coreui/react";
+import {
+  ServiceName,
+  ServiceDescription,
+  ServicePrice,
+  ServiceDuration,
+} from "../utils/validation";
+import { AddService, UpdateService } from "src/api/service";
 
 
 class AddEditForm extends React.Component {
-
     state = {
         id: '',
         name: '',
@@ -26,103 +30,41 @@ class AddEditForm extends React.Component {
         console.log("ADD")
         await this.Validation()
         if (this.state.valid == true) {
-          let rs = await AddService({
-            "name": this.state.name,
-            "duration": this.state.duration,
-            "description": this.state.description,
-            "price": this.state.price, 
-          });
-          this.props.addItemToState(rs)
-          this.props.toggle()
-          NotificationManager.info("Service Added Successfully", 'Info', 2000);
+            let rs = await AddService({
+                name: this.state.name,
+                duration: this.state.duration,
+                description: this.state.description,
+                price: this.state.price,
+            });
+            this.props.addItemToState(rs)
+            this.props.toggle()
+            NotificationManager.info("Service Added Successfully", 'Info', 2000);
         }
-
-
-        // await this.Validation()
-        // if (this.state.validation == true) {
-        //     fetch('http://localhost:3003/api/service', {
-        //         method: 'put',
-        //         headers: {
-        //             'Content-Type': 'application/json'
-        //         },
-        //         body: JSON.stringify({
-        //             name: this.state.name,
-        //             duration: this.state.duration,
-        //             description: this.state.description,
-        //             price: this.state.price,
-
-        //         })
-        //     }).then(response => response.json())
-        //         .then(item => {
-        //             if (item) {
-        //                 this.props.addItemToState(item.data)
-        //                 this.props.toggle()
-        //                 NotificationManager.info("Service Added Successfully", 'Info', 2000);
-        //             }
-        //             else {
-        //                 this.props.toggle()
-        //                 NotificationManager.error("Something Went Wrong", 'Error', 2000);
-        //             }
-        //         })
-        //         .catch(err => console.log(err))
-        // }
     }
 
     submitFormEdit = async (e) => {
         e.preventDefault()
         await this.Validation()
         if (this.state.valid == true) {
-          let rs = await UpdateService({
-            "id": this.state.id,
-            "duration": this.state.duration,
-            "name": this.state.name,
-            "description": this.state.description,
-            "price": this.state.price,
-          });
-          console.log('yip',rs)
-          this.props.updateState(rs[0])
-          this.props.toggle()
-          NotificationManager.info("Service Updated Successfully", 'Info', 2000);
+            let rs = await UpdateService({
+                id: this.state.id,
+                name: this.state.name,
+                duration: this.state.duration,
+                description: this.state.description,
+                price: this.state.price,
+            });
+            this.props.updateState(rs)
+            this.props.toggle()
+            NotificationManager.info("Service Added Successfully", 'Info', 2000);
         }
     }
 
-        // await this.Validation()
-        // if (this.state.validation == true) {
-        //     fetch('http://localhost:3003/api/service/update', {
-        //         method: 'post',
-        //         headers: {
-        //             'Content-Type': 'application/json'
-        //         },
-        //         body: JSON.stringify({
-        //             id: this.state.id,
-        //             duration: this.state.duration,
-        //             name: this.state.name,
-        //             description: this.state.description,
-        //             price: this.state.price,
-        //         })
-        //     }).then(response => response.json())
-        //         .then(item => {
-        //             console.log('item', item.data)
-        //             if (item) {
-        //                 this.props.updateState(item.data[0])
-        //                 this.props.toggle()
-        //                 NotificationManager.info("Service Updated Successfully", 'Info', 2000);
-        //             } else {
-        //                 this.props.toggle()
-        //                 NotificationManager.error("Something Went Wrong", 'Error', 2000);
-        //             }
-        //         })
-        //         .catch(err => console.log(err))
-        // }
-    // }
 
     Validation = () => {
-        console.log("VAL")
         if (ServiceName(this.state.name)
             && ServiceDescription(this.state.description)
             && ServicePrice(this.state.price)
-            && ServiceDuration(this.state.duration))
-            {this.setState({ valid: true })}
+            && ServiceDuration(this.state.duration)) { this.setState({ valid: true }) }
     }
 
     componentDidMount() {

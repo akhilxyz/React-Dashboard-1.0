@@ -4,6 +4,11 @@ import { NotificationManager } from 'react-notifications';
 import axios from 'axios'
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
+import { GetCompany } from 'src/api/company';
+import { AddNotification, UpdateNotification } from 'src/api/notification';
+import { GetService } from 'src/api/service';
+import { NotificationEmail, NotificationExpiry, NotificationMessage, 
+        NotificationCompany, NotificationService,  NotificationRenew } from '../utils/validation';
 var DatePicker = require("reactstrap-date-picker");
 
 const animatedComponents = makeAnimated();
@@ -26,42 +31,31 @@ class AddEditForm extends React.Component {
     this.setState({ [e.target.name]: e.target.value })
   }
 
-  submitFormAdd = e => {
+  submitFormAdd = async(e) => {
     e.preventDefault();
-    fetch('http://localhost:3003/api/notification', {
-      method: 'put',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
+    console.log("ADDEd")
+    await this.validation()
+    if (this.state.valid == true) {
+      let rs = await AddNotification({
         company: this.state.company,
         services: this.state.services,
         email: this.state.email,
         expiry: this.state.expiry,
         renew: this.state.renew,
         message: this.state.message
-      })
-    }).then(response => response.json())
-    .then(item => {
-      console.log('item',item)
-      if (item) {
-        this.props.updateState(item.data[0])
-        this.props.toggle()
-      } else {
-        // console.log('failure')
-      }
-    })
-    .catch(err => console.log(err))
+      });
+      console.log("RS", rs)
+      this.props.addItemToState(rs)
+      this.props.toggle()
+      NotificationManager.info("Notification Send Successfully", 'Info', 2000);
+    }
   }
 
-  submitFormEdit = e => {
+  submitFormEdit = async(e) => {
     e.preventDefault();
-    fetch('http://localhost:3003/api/notification/update', {
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
+    await this.validation()
+    if (this.state.valid == true) {
+      let rs = await UpdateNotification({
         id: this.state.id,
         company: this.state.company,
         services: this.state.services,
@@ -69,82 +63,40 @@ class AddEditForm extends React.Component {
         expiry: this.state.expiry,
         renew: this.state.renew,
         message: this.state.message
-      })
-    })
-      .then(response => response.json())
-      .then(item => {
-        console.log('NOT',item)
-        if (item) {
-          this.props.updateState(item.data[0])
-          this.props.toggle()
-        } else {
-          // console.log('failure')
-        }
-      })
-      .catch(err => console.log(err))
+      });
+      this.props.updateState(rs)
+      this.props.toggle()
+      NotificationManager.info("notification Updated & send Successfully", 'Info', 2000);
+    }
   }
 
   validation = (e) => {
-    e.preventDefault();
-    if (!this.state.company) {
-      NotificationManager.error('Please Enter Company Name', 'Info', 2000)
-      return false;
-    }
-    if (!this.state.services) {
-      NotificationManager.error('Please Enter Service', 'Info', 2000)
-      return false;
-    }
-    if (!this.state.expiry) {
-      NotificationManager.error('Please Enter Expiry Date', 'Error', 2000)
-      return false
-    }
-    if (!this.state.renew) {
-      NotificationManager.error('Please Enter Renew Date', 'Error', 2000)
-      return false;
-    }
-    if (!this.state.email) {
-          NotificationManager.error('Please Enter Email', 'Error', 2000)
-        return false;
-    }
-    if (!this.state.message) {
-      NotificationManager.error('Please Enter Message', 'Error', 2000)
-    return false;
-    }
-    else {
-      if (this.props.item) {
-        this.submitFormEdit()
-      }
-      this.submitFormAdd()
-    }
+    if (NotificationCompany(this.state.company)
+    && NotificationService(this.state.services)
+    && NotificationEmail(this.state.email)
+    && NotificationRenew(this.state.renew)
+    && NotificationExpiry(this.state.expiry)
+    && NotificationMessage(this.state.message))
+    this.setState({ valid: true })
   }
   
-  getServices() {
-    axios.post('http://localhost:3003/api/service')
-      .then((resp) => {
-        if (resp.success === false) { NotificationManager.error("Something Went Wrong", 'Error', 2000) }
-        else { this.setState({ serviceData: resp.data.data })}},(err) => { NotificationManager.error("Something Went Wrong", 'Error', 2000) })
-  }
 
-  getCompany(){
-    axios.post('http://localhost:3003/api/company')
-      .then((resp) => {
-        if (resp.success === false) { NotificationManager.error("Something Went Wrong", 'Error', 2000) }
-        else { this.setState({ companyData: resp.data.data })}},(err) => { NotificationManager.error("Something Went Wrong", 'Error', 2000) })
 
-  }
+  async componentDidMount() {
+    
+    let rsComp = await GetCompany();
+    this.setState({ companyData: rsComp });
 
-  componentDidMount() {
-    this.getServices()
-    this.getCompany()
+    let rsSer = await GetService();
+    this.setState({ serviceData: rsSer });
+
     if (this.props.item) {
       const { id, company, services, email, expiry, renew, message } = this.props.item
-      this.setState({ id, company, services, email, expiry, renew, message })
+      this.setState({id, company, services, email, expiry, renew, message })
     }
-    
   }
 
   render() {
-    console.log('COMP', this.state.company)
     return (
       <Form onSubmit={this.props.item ? this.submitFormEdit : this.submitFormAdd}>
         <FormGroup>

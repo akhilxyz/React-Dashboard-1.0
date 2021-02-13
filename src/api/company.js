@@ -11,7 +11,6 @@ const GetCompany = async () => {
   catch(e){
     return console.log("ERR");
   }
-  
 }
 
 const AddCompany = async (data) => {

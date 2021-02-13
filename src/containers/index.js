@@ -13,9 +13,9 @@ export {
   TheFooter,
   TheHeader,
   TheHeaderDropdown,
-  TheHeaderDropdownMssg,
-  TheHeaderDropdownNotif,
-  TheHeaderDropdownTasks,
+  // TheHeaderDropdownMssg,
+  // TheHeaderDropdownNotif,
+  // TheHeaderDropdownTasks,
   TheLayout,
   TheSidebar
 }

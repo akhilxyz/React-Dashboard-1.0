@@ -11,8 +11,8 @@ const loading = (
 // Containers
 
 // Pages
-const Login = React.lazy(() => import('../views/pages/login/Login'));
-const Register = React.lazy(() => import('../views/pages/register/Register'));
+const Login = React.lazy(() => import('../pages/login/Login'));
+const Register = React.lazy(() => import('../pages/register/Register'));
 
 
 class PublicRoutes extends Component {

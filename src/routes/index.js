@@ -4,13 +4,8 @@ import PrivateRoutes from './PrivateRoutes'
 import PublicRoutes from './PublicRoutes';
 
 function Routes() {
-    const { pathname } = useLocation();
 
-    useEffect(() => {
-        window.scrollTo(0, 0);
-    }, [pathname]);
-    
-    let isUserLoggedIn = true;
+    let isUserLoggedIn = false;
 
     if (localStorage.getItem("Token")){
         isUserLoggedIn = true

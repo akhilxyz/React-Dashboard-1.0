@@ -1,14 +1,19 @@
-import React from 'react';
-import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
-import Select from 'react-select';
-import { GetService } from 'src/api/service';
-import { CSelect } from '@coreui/react';
+import React from "react";
+import { Button, Form, FormGroup, Label, Input } from "reactstrap";
+import Select from "react-select";
+import { GetService } from "src/api/service";
+import { CSelect } from "@coreui/react";
 import {
-  CompanyAddress, CompanyName, CompanyPhone, CompanyService,
-  CompanyStatus, CompanyVat, CompanyWebsite
-} from '../utils/validation'
-import { AddCompany, UpdateCompany } from 'src/api/company';
-import { NotificationManager } from 'react-notifications';
+  CompanyAddress,
+  CompanyName,
+  CompanyPhone,
+  CompanyService,
+  CompanyStatus,
+  CompanyVat,
+  CompanyWebsite,
+} from "../utils/validation";
+import { AddCompany, UpdateCompany } from "src/api/company";
+import { NotificationManager } from "react-notifications";
 
 class AddEditForm extends React.Component {
   state = {
@@ -89,7 +94,6 @@ class AddEditForm extends React.Component {
   async componentDidMount() {
     let rs = await GetService();
     this.setState({ serviceData: rs });
-
     if (this.props.item) {
       const { id, name, vat, phone, website, address, service, status } = this.props.item
       this.setState({ id, name, vat, phone, website, address, service, status })
