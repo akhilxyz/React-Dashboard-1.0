@@ -9,7 +9,6 @@ import {
   CRow
 } from '@coreui/react'
 
-import usersData from '../../users/UsersData'
 import { GetCompany } from 'src/api/company'
 import { GetNotification } from 'src/api/notification'
 import { GetService } from 'src/api/service'

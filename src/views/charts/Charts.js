@@ -13,7 +13,7 @@ import {
   CChartPie,
   CChartPolarArea
 } from '@coreui/react-chartjs'
-import { DocsLink } from 'src/reusable'
+import { DocsLink } from 'src/views/buttons/button-dropdowns/node_modules/src/views/_base/breadcrumbs/node_modules/src/reusable'
 
 const Charts = () => {
 

@@ -25,6 +25,7 @@ class AddEditForm extends React.Component {
     address: '',
     service: '',
     status: '',
+    serviceDuration: "",
     selectedOption: null,
     serviceData: [],
     valid: false
@@ -88,7 +89,17 @@ class AddEditForm extends React.Component {
 
   handleChange = selectedOption => {
     this.setState({ service: selectedOption });
-    console.log("SELECTED OPTION :", selectedOption)
+  }
+
+  serviceDuration = () => {
+    if (this.state.service){
+      this.state.serviceData.map((it) => {
+        if(it.name == this.state.service) {
+          return it.duration
+        }
+      })
+    }
+
   }
 
   async componentDidMount() {

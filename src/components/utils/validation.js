@@ -126,6 +126,16 @@ function NotificationMessage(message) {
     );
 }
 
+function NotificationServiceStart(serviceStarted) {
+  if (serviceStarted !== undefined && serviceStarted) return "success";
+  else
+    return NotificationManager.error(
+      "Please Enter Service start Date",
+      "Info",
+      2000
+    );
+}
+
 const Validator = (value, size = 0) => {
   if (!value) return false;
   if (value.length < size) return false;
@@ -150,5 +160,6 @@ export {
   NotificationRenew,
   NotificationMessage,
   NotificationCompany,
-  NotificationService
+  NotificationService,
+  NotificationServiceStart
 };

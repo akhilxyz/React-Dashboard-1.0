@@ -8,20 +8,6 @@ import {
 } from "@coreui/react";
 import ModalForm from "../model/notificationModel";
 
-const getBadge = (status) => {
-  switch (status) {
-    case "Active":
-      return "success";
-    case "Inactive":
-      return "secondary";
-    case "Pending":
-      return "warning";
-    case "Banned":
-      return "danger";
-    default:
-      return "primary";
-  }
-};
 
 const NotificationTable = (props) => {
   const [details, setDetails] = React.useState([]);
@@ -40,6 +26,7 @@ const NotificationTable = (props) => {
   const fields = [
     { key: "company" },
     { key: "service" },
+    {key: "serviceStarted"},
     { key: "expiry" },
     { key: "renew" },
     { key: "email" },
@@ -87,11 +74,9 @@ const NotificationTable = (props) => {
       scopedSlots={{
         service: (item) => <td>{item.services.map((it) => it.value + " ")}</td>,
         company: (item) => <td>{item.company.map((it) => it.value + " ")}</td>,
-        status: (item) => (
-          <td>
-            <CBadge color={getBadge(item.status)}>{item.status}</CBadge>
-          </td>
-        ),
+        serviceStarted: (item) => <td>{item.serviceStarted.slice(0,10)}</td>,
+        expiry: (item) => <td>{item.expiry.slice(0,10)}</td>,
+        renew: (item) => <td>{item.renew.slice(0,10)}</td>,
         show_details: (item, index) => {
           return (
             <td className="py-2">
