@@ -25,6 +25,9 @@ class AddEditForm extends React.Component {
         this.setState({ [e.target.name]: e.target.value })
     }
 
+
+    // ********************** Add Function *****************************
+
     submitFormAdd = async (e) => {
         e.preventDefault()
         console.log("ADD")
@@ -41,6 +44,8 @@ class AddEditForm extends React.Component {
             NotificationManager.info("Service Added Successfully", 'Info', 2000);
         }
     }
+
+    // *************************** Edit Function *****************************
 
     submitFormEdit = async (e) => {
         e.preventDefault()
@@ -59,6 +64,7 @@ class AddEditForm extends React.Component {
         }
     }
 
+    // ****************** Validation Function *****************************
 
     Validation = () => {
         if (ServiceName(this.state.name)

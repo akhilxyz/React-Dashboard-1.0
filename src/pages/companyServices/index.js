@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import { Container, Row, Col } from "reactstrap";
-import ModalForm from "../../components/model/notificationModel";
+import ModalForm from "../../components/model/companyServicesModel";
 import { CSVLink } from "react-csv";
-import NotificationTable from "../../components/table/notificationTable";
-import { GetNotification } from "src/api/notification";
+import CompanyServiceTable from "../../components/table/companyServiceTable";
+import { GetCompanyServices } from "src/api/companyServices";
 
-class Notification extends Component {
+class CompanyServices extends Component {
   state = {
     items: [],
   };
@@ -40,7 +40,7 @@ class Notification extends Component {
   };
 
   async componentDidMount() {
-    let rs = await GetNotification();
+    let rs = await GetCompanyServices();
     if(rs){
       this.setState({ items: rs });
     }
@@ -54,7 +54,7 @@ class Notification extends Component {
             <Col>
               <div class="d-flex bg-light border">
                 <div class="p-2 flex-grow-1">
-                  <h5>Notification Details</h5>
+                  <h5>Company Services Details</h5>
                 </div>
                 <div class="p-2">
                   <CSVLink
@@ -78,7 +78,7 @@ class Notification extends Component {
         </div>
         <Row>
           <Col>
-            <NotificationTable
+            <CompanyServiceTable
               items={this.state.items}
               updateState={this.updateState}
               deleteItemFromState={this.deleteItemFromState}
@@ -90,4 +90,4 @@ class Notification extends Component {
   }
 }
 
-export default Notification;
+export default CompanyServices;

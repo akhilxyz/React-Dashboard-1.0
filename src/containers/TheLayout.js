@@ -1,29 +1,23 @@
-import React from 'react'
-import NotificationContainer from 'react-notifications/lib/NotificationContainer'
-import 'react-notifications/lib/notifications.css';
+import React from "react";
+import NotificationContainer from "react-notifications/lib/NotificationContainer";
+import "react-notifications/lib/notifications.css";
 
-import {
-  TheContent,
-  TheSidebar,
-  TheFooter,
-  TheHeader
-} from './index'
+import { TheContent, TheSidebar, TheFooter, TheHeader } from "./index";
 
 const TheLayout = () => {
-
   return (
     <div className="c-app c-default-layout">
-      <NotificationContainer/>
-      <TheSidebar/>
+      <NotificationContainer />
+      <TheSidebar />
       <div className="c-wrapper">
-        <TheHeader/>
+        <TheHeader />
         <div className="c-body">
-          <TheContent/>
+          <TheContent />
         </div>
-        <TheFooter/>
+        <TheFooter />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default TheLayout
+export default TheLayout;

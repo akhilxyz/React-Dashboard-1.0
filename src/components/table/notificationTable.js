@@ -1,13 +1,11 @@
 import React from "react";
 import {
-  CBadge,
   CCardBody,
   CCollapse,
   CButton,
   CDataTable,
 } from "@coreui/react";
 import ModalForm from "../model/notificationModel";
-
 
 const NotificationTable = (props) => {
   const [details, setDetails] = React.useState([]);
@@ -26,7 +24,7 @@ const NotificationTable = (props) => {
   const fields = [
     { key: "company" },
     { key: "service" },
-    {key: "serviceStarted"},
+    { key: "serviceStarted" },
     { key: "expiry" },
     { key: "renew" },
     { key: "email" },
@@ -74,9 +72,9 @@ const NotificationTable = (props) => {
       scopedSlots={{
         service: (item) => <td>{item.services.map((it) => it.value + " ")}</td>,
         company: (item) => <td>{item.company.map((it) => it.value + " ")}</td>,
-        serviceStarted: (item) => <td>{item.serviceStarted.slice(0,10)}</td>,
-        expiry: (item) => <td>{item.expiry.slice(0,10)}</td>,
-        renew: (item) => <td>{item.renew.slice(0,10)}</td>,
+        serviceStarted: (item) => <td>{item.serviceStarted.slice(0, 10)}</td>,
+        expiry: (item) => <td>{item.expiry.slice(0, 10)}</td>,
+        renew: (item) => <td>{item.renew.slice(0, 10)}</td>,
         show_details: (item, index) => {
           return (
             <td className="py-2">

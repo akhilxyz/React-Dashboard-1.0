@@ -1,9 +1,9 @@
 import axios from "axios";
 
-const URL = "http://localhost:3003/api/notification/";
+const URL = "http://localhost:3003/api/companyServices";
 const fetcher = axios;
 
-const GetNotification = async () => {
+const GetCompanyServices = async () => {
   try {
     let rs = await fetcher.post(URL);
     return rs.data.data;
@@ -12,7 +12,7 @@ const GetNotification = async () => {
   }
 };
 
-const AddNotification = async (data) => {
+const AddCompanyServices = async (data) => {
   let d = { ...data };
   try {
     let rs = await fetcher.put(URL, d);
@@ -22,14 +22,14 @@ const AddNotification = async (data) => {
   }
 };
 
-const UpdateNotification = async (data) => {
+const UpdateCompanyServices = async (data) => {
   let d = { ...data };
   try {
-    let rs = await fetcher.post(`${URL}/update`, d);
+    let rs = await fetcher.patch(URL, d);
     return rs.data.data;
   } catch (e) {
-    return console.log("ERR");
+    return false;
   }
 };
 
-export { GetNotification, AddNotification, UpdateNotification };
+export { GetCompanyServices, AddCompanyServices, UpdateCompanyServices };

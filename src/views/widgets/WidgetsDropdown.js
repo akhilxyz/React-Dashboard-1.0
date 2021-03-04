@@ -22,11 +22,17 @@ const WidgetsDropdown = () => {
 
   useEffect(async () => {
     let CompanyList = await GetCompany();
-    setCompany(CompanyList.length);
+    if(CompanyList){
+      setCompany(CompanyList.length);
+    }
     let NotificationList = await GetNotification();
-    setNotifications(NotificationList.length);
+    if(NotificationList){
+      setNotifications(NotificationList.length);
+    }
     let servicesList = await GetService();
-    setServices(servicesList.length);
+    if(servicesList){
+      setServices(servicesList.length);
+    }
   }, []);
 
   // render

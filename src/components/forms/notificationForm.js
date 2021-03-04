@@ -1,16 +1,22 @@
 import React from 'react';
 import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
 import { NotificationManager } from 'react-notifications';
-import axios from 'axios'
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
 import { GetCompany } from 'src/api/company';
 import { AddNotification, UpdateNotification } from 'src/api/notification';
 import { GetService } from 'src/api/service';
-import { NotificationEmail, NotificationExpiry, NotificationMessage, 
-        NotificationCompany, NotificationService,  NotificationRenew, NotificationServiceStart } from '../utils/validation';
-var DatePicker = require("reactstrap-date-picker");
+import {
+  NotificationEmail,
+  NotificationExpiry,
+  NotificationMessage,
+  NotificationCompany,
+  NotificationService,
+  NotificationRenew,
+  NotificationServiceStart,
+} from "../utils/validation";
 
+var DatePicker = require("reactstrap-date-picker");
 const animatedComponents = makeAnimated();
 
 class AddEditForm extends React.Component {
@@ -32,6 +38,8 @@ class AddEditForm extends React.Component {
     this.setState({ [e.target.name]: e.target.value })
   }
 
+  // ****************** Add Function *****************************
+
   submitFormAdd = async(e) => {
     e.preventDefault();
     console.log("ADDEd")
@@ -51,6 +59,8 @@ class AddEditForm extends React.Component {
       NotificationManager.info("Notification Added Successfully", 'Info', 2000);
     }
   }
+
+  // ****************** Edit Function *****************************
 
   submitFormEdit = async(e) => {
     e.preventDefault();
@@ -72,6 +82,8 @@ class AddEditForm extends React.Component {
     }
   }
 
+  // ****************** Validations Function *****************************
+
   validation = (e) => {
     if (NotificationCompany(this.state.company)
     && NotificationService(this.state.services)
@@ -86,10 +98,13 @@ class AddEditForm extends React.Component {
   async componentDidMount() {
     
     let rsComp = await GetCompany();
-    this.setState({ companyData: rsComp });
-
     let rsSer = await GetService();
-    this.setState({ serviceData: rsSer });
+
+    if(rsComp && rsSer){
+      this.setState({ companyData: rsComp });
+      this.setState({ serviceData: rsSer });
+    }
+    
 
     if (this.props.item) {
       const { id, company, services, email,serviceStarted,  expiry, renew, message,  } = this.props.item
@@ -98,14 +113,6 @@ class AddEditForm extends React.Component {
   }
 
   render() {
-    let compService = null ;
-    if(this.state.company != ''){
-      this.state.companyData.map((it) => {
-        if (it.name == this.state.company){
-          compService = it.service
-        }
-      })
-    }
 
     return (
       <Form onSubmit={this.props.item ? this.submitFormEdit : this.submitFormAdd}>

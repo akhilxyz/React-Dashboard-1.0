@@ -5,19 +5,18 @@ import {
   CCollapse,
   CButton,
   CDataTable,
-  CCol,
 } from "@coreui/react";
 import ModalForm from "../model/companyModel";
-
-const getBadge = (status) => {
-  switch (status) {
-    case "Active":
+import Permissions from "../utils/permissions"
+const getBadge = (active) => {
+  switch (active) {
+    case 1:
       return "success";
     case "Inactive":
       return "secondary";
     case "Pending":
       return "warning";
-    case "Banned":
+    case 0:
       return "danger";
     default:
       return "primary";
@@ -40,12 +39,12 @@ const CompanyTable = (props) => {
 
   const fields = [
     { key: "name" },
-    { key: "website" },
     { key: "vat" },
     { key: "address" },
     { key: "phone" },
     { key: "service" },
-    { key: "status" },
+    { key: "status", filter: false,
+  },
     {
       key: "show_details",
       label: "",
@@ -87,10 +86,12 @@ const CompanyTable = (props) => {
       sorter
       pagination
       scopedSlots={{
-        service: (item) => <td>{item.service.map((it) => it.value + " ")}</td>,
+        // service: (item) => <td>{item.service.map((it) => it.value + ' ')}</td>,
+        phone: (item) => <td>{item.phone_number}</td>,
         status: (item) => (
           <td>
-            <CBadge color={getBadge(item.status)}>{item.status}</CBadge>
+            <CBadge color={getBadge(item.active)}>{item.active === 1 ? 
+            <span>Active</span>: <span>InActive</span> }</CBadge>
           </td>
         ),
         show_details: (item, index) => {
@@ -115,21 +116,22 @@ const CompanyTable = (props) => {
             <CCollapse show={details.includes(index)}>
               <CCardBody style={{ float: "right", textAlign: "right" }}>
                 <h4>{item.name}</h4>
-                <p className="text-muted">User since: {item.created_on}</p>
+                <p className="text-muted">User since: {item.date_created}</p>
                 <div style={{ width: "110px", marginLeft: "110px" }}>
-                  <ModalForm
+                {Permissions.includes("company.edit") ? <ModalForm
                     buttonLabel="Edit"
                     item={item}
                     updateState={props.updateState}
-                  />{" "}
-                  <CButton
+                  /> : <></>}
+                  {Permissions.includes("company.delete") ? <CButton
                     size="sm"
                     color="danger"
                     className="ml-1"
                     onClick={() => deleteItem(item.id)}
                   >
                     Delete
-                  </CButton>
+                  </CButton> : <> </>}
+                  
                 </div>
               </CCardBody>
             </CCollapse>

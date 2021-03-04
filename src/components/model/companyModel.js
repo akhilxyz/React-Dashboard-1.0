@@ -1,7 +1,7 @@
-import { CButton } from '@coreui/react'
-import React, { Component } from 'react'
-import { Button, Modal, ModalHeader, ModalBody } from 'reactstrap'
-import AddEditForm from '../forms/companyForm'
+import { CButton } from "@coreui/react";
+import React, { Component } from "react";
+import { Button, Modal, ModalHeader, ModalBody } from "reactstrap";
+import AddEditForm from "../forms/companyForm";
 
 class ModalForm extends Component {
   constructor(props) {
@@ -19,9 +19,8 @@ class ModalForm extends Component {
 
   render() {
       const closeBtn = <button className="close" onClick={this.toggle}>&times;</button>
-
       const label = this.props.buttonLabel
-
+      
       let button = ''
       let title = ''
 

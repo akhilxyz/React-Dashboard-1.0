@@ -1,33 +1,37 @@
 import React from "react";
-import { Button, Form, FormGroup, Label, Input } from "reactstrap";
-import Select from "react-select";
+import { Button, Form, FormGroup, Label, Input, Row, Col } from "reactstrap";
 import { GetService } from "src/api/service";
 import { CSelect } from "@coreui/react";
 import {
-  CompanyAddress,
+  CompanyCity,
   CompanyName,
+  CompanyAddress,
+  CompanyCountry,
   CompanyPhone,
-  CompanyService,
-  CompanyStatus,
-  CompanyVat,
-  CompanyWebsite,
+  CompanyState,
 } from "../utils/validation";
 import { AddCompany, UpdateCompany } from "src/api/company";
 import { NotificationManager } from "react-notifications";
+import { GetCountry } from "src/api/country";
+const phone = require('phone');
 
 class AddEditForm extends React.Component {
   state = {
     id: '',
     name: '',
     vat: '',
-    phone: '',
-    website: '',
+    phone_number: '',
+    country: null,
     address: '',
+    city: '',
+    state: '',
+    zip: '',
     service: '',
-    status: '',
+    active: '',
     serviceDuration: "",
     selectedOption: null,
     serviceData: [],
+    countryData: [],
     valid: false
   }
 
@@ -35,24 +39,30 @@ class AddEditForm extends React.Component {
     this.setState({ [e.target.name]: e.target.value })
   }
 
+  // ****************** Add Function *****************************
+
   submitFormAdd = async (e) => {
     e.preventDefault();
     await this.validation()
     if (this.state.valid == true) {
       let rs = await AddCompany({
         "name": this.state.name,
-        "vat": this.state.vat,
-        "phone": this.state.phone,
-        "website": this.state.website,
         "address": this.state.address,
-        "service": this.state.service,
-        "status": this.state.status
+        "city": this.state.city,
+        "state": this.state.state,
+        "country": this.state.country,
+        "phone_number": this.state.phone_number,
+        "active": parseInt(this.state.active),
+        "vat": this.state.vat,
+        "zip": this.state.zip,
       });
       this.props.addItemToState(rs)
       this.props.toggle()
       NotificationManager.info("Company Added Successfully", 'Info', 2000);
     }
   }
+
+  // ****************** Edit Function *****************************
 
   submitFormEdit = async (e) => {
     e.preventDefault();
@@ -61,53 +71,62 @@ class AddEditForm extends React.Component {
       let rs = await UpdateCompany({
         "id": this.state.id,
         "name": this.state.name,
-        "vat": this.state.vat,
-        "phone": this.state.phone,
-        "website": this.state.website,
         "address": this.state.address,
-        "service": this.state.service,
-        "status": this.state.status
+        "city": this.state.city,
+        "state": this.state.state,
+        "country": this.state.country,
+        "phone_number": this.state.phone_number,
+        "active": parseInt(this.state.active),
+        "vat": this.state.vat,
+        "zip": this.state.zip,
       });
-      this.props.updateState(rs)
-      this.props.toggle()
-      NotificationManager.info("Company Updated Successfully", 'Info', 2000);
+      if (rs === undefined) {
+        NotificationManager.error("Something Went Wrong", "Info", 2000);
+      }
+      else {
+        this.props.updateState(rs)
+        this.props.toggle()
+        NotificationManager.info("Company Updated Successfully", 'Info', 2000);
+      }
     }
   }
+
+  // ****************** Validation Function *****************************
 
   validation = (e) => {
-
     if (CompanyName(this.state.name)
-      && CompanyService(this.state.service)
-      && CompanyStatus(this.state.status)
-      && CompanyVat(this.state.vat)
-      && CompanyPhone(this.state.phone)
-      && CompanyWebsite(this.state.website)
+      && CompanyCountry(this.state.country)
+      && CompanyPhone(this.state.phone_number)
+      && CompanyCity(this.state.city)
+      && CompanyState(this.state.state)
       && CompanyAddress(this.state.address)
-    )
-      this.setState({ valid: true })
-  }
-
-  handleChange = selectedOption => {
-    this.setState({ service: selectedOption });
-  }
-
-  serviceDuration = () => {
-    if (this.state.service){
-      this.state.serviceData.map((it) => {
-        if(it.name == this.state.service) {
-          return it.duration
-        }
-      })
+    ) {
+      let ISO = ""
+      this.state.countryData.map((it) => { if (it.id === this.state.country) { ISO = it.iso3 }; })
+      const Phone = phone(this.state.phone_number, ISO,);
+      console.log("PH", Phone)
+      if (Phone.length > 0) {
+        this.setState({ valid: true })
+      } else {
+        NotificationManager.error("Invalid Phone Number", "Info", 2000);
+      }
     }
-
   }
 
   async componentDidMount() {
     let rs = await GetService();
-    this.setState({ serviceData: rs });
+    let countryData = await GetCountry();
+    if (rs && countryData) {
+      this.setState({ serviceData: rs });
+      this.setState({ countryData: countryData });
+    }
     if (this.props.item) {
-      const { id, name, vat, phone, website, address, service, status } = this.props.item
-      this.setState({ id, name, vat, phone, website, address, service, status })
+      const { id, name, vat, phone_number, city, state, zip, address, service, active } = this.props.item
+      this.setState({ id, name, vat, phone_number, city, state, zip, address, service, active })
+      let countryList = [this.props.item.country]
+      countryList.map((it) => {
+        this.setState({ country: it.id })
+      })
     }
   }
 
@@ -118,37 +137,56 @@ class AddEditForm extends React.Component {
           <Label for="name">Name</Label>
           <Input type="text" name="name" id="name" onChange={this.onChange} value={this.state.name === null ? '' : this.state.name} />
         </FormGroup>
-        <FormGroup>
-          <Label for="service">Service</Label>
-          <Select isMulti value={this.state.service} onChange={this.handleChange} options={this.state.serviceData.map((item, index) => {
-            return { value: item.name, label: item.name, id: item.id };
-          })} />
-        </FormGroup>
-        <FormGroup>
-          <Label for="duration">Service Status</Label>
-          <CSelect custom size="lg" name="selectLg" id="selectLg" value={this.state.status} onChange={(e) => this.setState({ status: e.target.value })}>
-            <option value="">Select Status</option>
-            <option value="Active">Active</option>
-            <option value="Inactive">Inactive</option>
-            <option value="Pending">Pending</option>
-            <option value="Banned">Banned</option>
-          </CSelect>
-        </FormGroup>
+        <Row form>
+          <Col md={3}>
+            <FormGroup>
+              <Label for="country">Country</Label>
+              <Input type="select" name="country" id="country" onChange={this.onChange} value={this.state.country === null ? '' : this.state.country}>
+                <option value="">Select</option>
+                {this.state.countryData.map((it) => {
+                  return (
+                    <option value={it.id}>
+                      {it.iso3}
+                    </option>
+                  );
+                })}
+              </Input>
+            </FormGroup>
+          </Col>
+          <Col >
+            <FormGroup>
+              <Label for="phone_number">Phone Number</Label>
+              <Input type="phone_number" name="phone_number" id="phone_number" onChange={this.onChange} value={this.state.phone_number === null ? '' : this.state.phone_number} placeholder="Enter Number" />
+            </FormGroup>
+          </Col>
+        </Row>
         <FormGroup>
           <Label for="vat">Vat No</Label>
           <Input type="text" name="vat" id="vat" onChange={this.onChange} value={this.state.vat === null ? '' : this.state.vat} />
         </FormGroup>
         <FormGroup>
-          <Label for="phone">phone</Label>
-          <Input type="phone" name="phone" id="phone" onChange={this.onChange} value={this.state.phone === null ? '' : this.state.phone} />
+          <Label for="city">City</Label>
+          <Input type="text" name="city" id="city" onChange={this.onChange} value={this.state.city === null ? '' : this.state.city} />
         </FormGroup>
         <FormGroup>
-          <Label for="website">Website</Label>
-          <Input type="text" name="website" id="website" onChange={this.onChange} value={this.state.website === null ? '' : this.state.website} />
+          <Label for="state">State</Label>
+          <Input type="text" name="state" id="state" onChange={this.onChange} value={this.state.state === null ? '' : this.state.state} />
         </FormGroup>
         <FormGroup>
           <Label for="address">Address</Label>
-          <Input type="text" name="address" id="address" onChange={this.onChange} value={this.state.address === null ? '' : this.state.address} />
+          <Input type="textarea" name="address" id="address" onChange={this.onChange} value={this.state.address === null ? '' : this.state.address} />
+        </FormGroup>
+        <FormGroup>
+          <Label for="zip">Zip</Label>
+          <Input type="text" name="zip" id="zip" onChange={this.onChange} value={this.state.zip === null ? '' : this.state.zip} />
+        </FormGroup>
+        <FormGroup>
+          <Label for="active">Status</Label>
+          <CSelect custom size="lg" name="active" id="active" value={this.state.active} onChange={(e) => this.setState({ active: e.target.value })}>
+            <option value="">Select active</option>
+            <option value={1}>Active</option>
+            <option value={0}>Inactive</option>
+          </CSelect>
         </FormGroup>
         <Button>Submit</Button>
       </Form>

@@ -20,7 +20,9 @@
     "classnames": "^2.2.6",
     "core-js": "^3.8.1",
     "enzyme": "^3.11.0",
+    "force": "^0.0.3",
     "node-sass": "^4.14.1",
+    "phone": "^2.4.21",
     "prop-types": "^15.7.2",
     "react": "^17.0.1",
     "react-app-polyfill": "^2.0.0",
@@ -34,6 +36,7 @@
     "reactstrap": "^8.9.0",
     "reactstrap-date-picker": "0.0.11",
     "redux": "4.0.5",
+    "uuid": "^8.3.2",
     "validator": "^13.5.2"
   },
   "devDependencies": {

@@ -1,29 +1,8 @@
 import React, { useEffect } from "react";
-import {
-  CBadge,
-  CCardBody,
-  CCollapse,
-  CButton,
-  CDataTable,
-} from "@coreui/react";
+import { CCardBody, CCollapse, CButton, CDataTable } from "@coreui/react";
 import ModalForm from "../model/serviceModel";
 import { GetCompany } from "src/api/company";
 import { NotificationManager } from "react-notifications";
-
-const getBadge = (status) => {
-  switch (status) {
-    case "Active":
-      return "success";
-    case "Inactive":
-      return "secondary";
-    case "Pending":
-      return "warning";
-    case "Banned":
-      return "danger";
-    default:
-      return "primary";
-  }
-};
 
 const ServiceTable = (props) => {
   const [details, setDetails] = React.useState([]);
@@ -113,11 +92,6 @@ const ServiceTable = (props) => {
       sorter
       pagination
       scopedSlots={{
-        status: (item) => (
-          <td>
-            <CBadge color={getBadge(item.status)}>{item.status}</CBadge>
-          </td>
-        ),
         show_details: (item, index) => {
           return (
             <td className="py-2">
@@ -139,8 +113,8 @@ const ServiceTable = (props) => {
           return (
             <CCollapse show={details.includes(index)}>
               <CCardBody style={{ float: "right", textAlign: "right" }}>
-                <h4>{item.company}</h4>
-                <p className="text-muted">User since: {item.datecreated}</p>
+                <h4>{item.name}</h4>
+                <p className="text-muted">Service since: {item.created_on}</p>
                 <div style={{ width: "110px", marginLeft: "110px" }}>
                   <ModalForm
                     buttonLabel="Edit"

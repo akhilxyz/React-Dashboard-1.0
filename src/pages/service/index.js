@@ -10,11 +10,15 @@ class Service extends Component {
     items: [],
   };
 
+  // ****************** Add Function *****************************
+
   addItemToState = (item) => {
     this.setState((prevState) => ({
       items: [...prevState.items, item],
     }));
   };
+
+  // ****************** Update Function *****************************
 
   updateState = (item) => {
     console.log("itemmm", item);
@@ -30,6 +34,8 @@ class Service extends Component {
     this.setState({ items: newArray });
   };
 
+  // ****************** Delete Function *****************************
+
   deleteItemFromState = (id) => {
     const updatedItems = this.state.items.filter((item) => item.id !== id);
     this.setState({ items: updatedItems });
@@ -37,7 +43,9 @@ class Service extends Component {
 
   async componentDidMount() {
     let rs = await GetService();
-    this.setState({ items: rs });
+    if(rs){
+      this.setState({ items: rs });
+    }
   }
 
   render() {
